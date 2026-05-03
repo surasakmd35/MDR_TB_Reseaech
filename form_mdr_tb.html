@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>แบบบันทึกข้อมูลวิจัย MDR-TB — รพ.มุกดาหาร</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary:       #1565c0;
+      --primary-light: #e3f2fd;
+      --primary-mid:   #1976d2;
+      --accent:        #0288d1;
+      --danger:        #c62828;
+      --success:       #2e7d32;
+      --text:          #1a237e;
+      --text-body:     #37474f;
+      --text-light:    #78909c;
+      --border:        #cfd8dc;
+      --bg:            #eceff1;
+      --card:          #ffffff;
+      --radius:        14px;
+      --radius-sm:     8px;
+      --shadow:        0 2px 16px rgba(21,101,192,0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans Thai', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text-body);
+      line-height: 1.7;
+      padding-bottom: 80px;
+    }
+
+    /* ───── Header ───── */
+    .form-header {
+      background: linear-gradient(135deg, #0d47a1 0%, #1976d2 60%, #0288d1 100%);
+      color: #fff;
+      padding: 28px 20px 20px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(13,71,161,0.25);
+    }
+    .form-header .badge-ec {
+      display: inline-block;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 0.72rem;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+    .form-header h1 { font-size: 1.35rem; font-weight: 700; margin-bottom: 4px; }
+    .form-header p  { font-size: 0.82rem; opacity: 0.82; }
+
+    /* Progress */
+    .progress-wrap { margin-top: 18px; }
+    .progress-label { font-size: 0.75rem; opacity: 0.75; margin-bottom: 5px; }
+    .progress-track { height: 5px; background: rgba(255,255,255,0.25); border-radius: 3px; }
+    .progress-fill  { height: 100%; background: #fff; border-radius: 3px; width: 0%; transition: width .4s ease; }
+
+    /* ───── Container ───── */
+    .container { max-width: 800px; margin: 0 auto; padding: 24px 16px; }
+
+    /* ───── Alert ───── */
+    .alert {
+      display: flex; align-items: flex-start; gap: 10px;
+      background: #fff8e1; border: 1px solid #ffe082;
+      border-left: 4px solid #f9a825;
+      border-radius: var(--radius-sm);
+      padding: 12px 16px; font-size: 0.82rem; color: #5d4037;
+      margin-bottom: 20px;
+    }
+
+    /* ───── Section card ───── */
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    .card-header {
+      display: flex; align-items: center; gap: 10px;
+      padding: 13px 20px;
+      background: var(--primary-light);
+      border-bottom: 1px solid #bbdefb;
+    }
+    .card-header .ico { font-size: 1.1rem; }
+    .card-header h2 {
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--primary); margin: 0;
+    }
+    .card-body { padding: 22px 20px; }
+
+    /* ───── Fields ───── */
+    .field { margin-bottom: 20px; }
+    .field:last-child { margin-bottom: 0; }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    label.field-label {
+      display: block;
+      font-size: 0.855rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 7px;
+    }
+    .req::after { content: ' *'; color: var(--danger); }
+
+    .helper {
+      font-size: 0.76rem;
+      color: var(--text-light);
+      margin-top: 5px;
+      line-height: 1.5;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select, textarea {
+      width: 100%;
+      padding: 10px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text-body);
+      background: #fff;
+      transition: border-color .2s, box-shadow .2s;
+      appearance: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary-mid);
+      box-shadow: 0 0 0 3px rgba(25,118,210,0.13);
+    }
+    select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231565c0' d='M6 8L0 0h12z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+    /* ───── Radio chips ───── */
+    .radio-group { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+
+    .chip {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 7px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 30px;
+      cursor: pointer;
+      font-size: 0.84rem;
+      color: var(--text-body);
+      background: #fff;
+      transition: all .18s;
+      user-select: none;
+    }
+    .chip:hover { border-color: var(--primary-mid); background: var(--primary-light); }
+    .chip input[type="radio"] { width: 15px; height: 15px; accent-color: var(--primary); cursor: pointer; }
+    .chip.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    /* ───── Conditional box ───── */
+    .cond-box {
+      display: none;
+      margin-top: 12px;
+      padding: 14px 16px;
+      background: #f8f9fa;
+      border-radius: var(--radius-sm);
+      border-left: 3px solid var(--accent);
+    }
+    .cond-box.open { display: block; }
+
+    /* ───── BMI pill ───── */
+    .bmi-pill {
+      display: none;
+      align-items: center; gap: 8px;
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: var(--primary-light);
+      border-radius: 30px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+    .bmi-pill.show { display: inline-flex; }
+    .bmi-cat { font-weight: 400; color: var(--text-light); font-size: 0.8rem; }
+
+    /* ───── Divider ───── */
+    hr { border: none; border-top: 1px solid #eceff1; margin: 18px 0; }
+
+    /* ───── Badge ───── */
+    .badge {
+      display: inline-block;
+      padding: 1px 8px; border-radius: 10px;
+      font-size: 0.68rem; font-weight: 700;
+      vertical-align: middle; margin-left: 4px;
+    }
+    .badge-case    { background: #fce4ec; color: #880e4f; }
+    .badge-control { background: #e8f5e9; color: #1b5e20; }
+
+    /* ───── Submit ───── */
+    .submit-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px 24px;
+      text-align: center;
+    }
+    .submit-card p { color: var(--text-light); font-size: 0.83rem; margin-bottom: 16px; }
+
+    .btn-submit {
+      background: linear-gradient(135deg, #0d47a1, #1976d2);
+      color: #fff;
+      border: none;
+      padding: 13px 52px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(13,71,161,0.35);
+      transition: transform .18s, box-shadow .18s;
+    }
+    .btn-submit:hover  { transform: translateY(-2px); box-shadow: 0 7px 20px rgba(13,71,161,0.4); }
+    .btn-submit:active { transform: translateY(0); }
+
+    .btn-reset {
+      background: none;
+      color: var(--text-light);
+      border: 1.5px solid var(--border);
+      padding: 10px 28px;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      cursor: pointer;
+      margin-left: 12px;
+      transition: border-color .18s;
+    }
+    .btn-reset:hover { border-color: var(--danger); color: var(--danger); }
+
+    /* ───── Success overlay ───── */
+    .overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45);
+      z-index: 999;
+      justify-content: center; align-items: center;
+    }
+    .overlay.show { display: flex; }
+    .overlay-box {
+      background: #fff; border-radius: 20px;
+      padding: 40px 36px; text-align: center;
+      max-width: 380px; width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    }
+    .overlay-box .ico-big { font-size: 3rem; margin-bottom: 12px; }
+    .overlay-box h3 { font-size: 1.2rem; color: var(--success); margin-bottom: 8px; }
+    .overlay-box p  { font-size: 0.85rem; color: var(--text-light); margin-bottom: 20px; }
+    .btn-new {
+      background: linear-gradient(135deg, #2e7d32, #43a047);
+      color: #fff; border: none;
+      padding: 11px 28px; border-radius: 8px;
+      font-family: inherit; font-size: 0.9rem; font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* ───── Upload area ───── */
+    .upload-area {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      background: #fafafa;
+    }
+    .upload-area:hover, .upload-area.drag-over {
+      border-color: var(--primary-mid);
+      background: var(--primary-light);
+    }
+    .upload-area.drag-over { transform: scale(1.01); }
+    .upload-area.has-file  { border-style: solid; border-color: #43a047; background: #f1f8e9; }
+    .upload-ico  { font-size: 2rem; margin-bottom: 8px; }
+    .upload-text { font-size: 0.9rem; font-weight: 600; color: var(--text); }
+    .upload-hint { font-size: 0.75rem; color: var(--text-light); margin-top: 4px; }
+
+    /* ───── Responsive ───── */
+    @media (max-width: 520px) {
+      .form-header h1 { font-size: 1.1rem; }
+      .field-row      { grid-template-columns: 1fr; }
+      .chip           { font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ Header ══ -->
+<div class="form-header">
+  <div class="badge-ec">EC-Approved · De-identified</div>
+  <h1>🫁 แบบบันทึกข้อมูลวิจัย MDR-TB</h1>
+  <p>โรงพยาบาลมุกดาหาร &nbsp;·&nbsp; ช่วง ต.ค. 2563 – ก.ย. 2567</p>
+  <div class="progress-wrap">
+    <div class="progress-label" id="progressLabel">กรอกข้อมูล 0%</div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</div>
+
+<!-- ══ Body ══ -->
+<div class="container">
+
+  <div class="alert">
+    ⚠️&nbsp; ข้อมูลผู้ป่วยจัดเก็บแบบ <strong>de-identified</strong> ตามมาตรฐานจริยธรรมการวิจัย — ไม่บันทึก HN หรือชื่อผู้ป่วย
+  </div>
+
+  <!-- ── 1. การวินิจฉัย ── -->
+  <div class="card">
+    <div class="card-header">
+      <span class="ico">📋</span>
+      <h2>1. ข้อมูลการวินิจฉัย</h2>
+    </div>
+    <div class="card-body">
+
+      <div class="field">
+        <label class="field-label req">ประเภทวัณโรค</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="type_tb" value="0" required>
+            DS-TB <span class="badge badge-control">Control</span></label>
+          <label class="chip"><input type="radio" name="type_tb" value="1">
+            MDR-TB <span class="badge badge-case">Case</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">วันที่วินิจฉัยครั้งแรก</label>
+        <input type="date" name="date_dx" min="2018-01-01" max="2024-09-30" required>
+        <div class="helper">ผู้ป่วยที่วินิจฉัยก่อน ต.ค. 2563 แต่ยังอยู่ในทะเบียน TB ใส่วันวินิจฉัยจริงได้</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">ตำแหน่งที่ติดเชื้อ</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="site" value="pulmonary" required> Pulmonary</label>
+          <label class="chip"><input type="radio" name="site" value="pleura"> Pleura</label>
+          <label class="chip"><input type="radio" name="site" value="lymph node"> Lymph node</label>
+          <label class="chip"><input type="radio" name="site" value="bone and joint"> Bone &amp; Joint</label>
+          <label class="chip"><input type="radio" name="site" value="CNS"> CNS</label>
+          <label class="chip"><input type="radio" name="site" value="other"> อื่น ๆ</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 2. ข้อมูลทั่วไป ── -->
+  <div class="card">
+    <div class="card-header">
+      <span class="ico">👤</span>
+      <h2>2. ข้อมูลทั่วไป</h2>
+    </div>
+    <div class="card-body">
+
+      <div class="field">
+        <label class="field-label req">เพศ</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="sex" value="0" required> ชาย</label>
+          <label class="chip"><input type="radio" name="sex" value="1"> หญิง</label>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label req">อายุ (ปี)</label>
+          <input type="number" name="age" min="1" max="120" placeholder="เช่น 45" required>
+        </div>
+        <div class="field">
+          <label class="field-label req">น้ำหนัก (kg)</label>
+          <input type="number" name="bw" id="bw" min="20" max="200" step="0.1" placeholder="เช่น 55.0" required oninput="calcBMI()">
+        </div>
+        <div class="field">
+          <label class="field-label req">ส่วนสูง (cm)</label>
+          <input type="number" name="height" id="height" min="100" max="220" step="0.1" placeholder="เช่น 165" required oninput="calcBMI()">
+        </div>
+      </div>
+
+      <input type="hidden" name="bmi" id="bmiHidden">
+      <div class="bmi-pill" id="bmiPill">
+        📊 BMI = <span id="bmiVal">—</span> kg/m²
+        <span class="bmi-cat" id="bmiCat"></span>
+      </div>
+
+      <div class="field" style="margin-top:18px">
+        <label class="field-label req">ภูมิลำเนา (อำเภอ)</label>
+        <select name="address" required>
+          <option value="">— เลือกอำเภอ —</option>
+          <option value="0">เมืองมุกดาหาร</option>
+          <option value="1">ดอนตาล</option>
+          <option value="2">ดงหลวง</option>
+          <option value="3">คำชะอี</option>
+          <option value="4">หนองสูง</option>
+          <option value="5">หว้านใหญ่</option>
+          <option value="6">นิคมคำสร้อย</option>
+          <option value="7">จังหวัดอื่น (รักษาที่มุกดาหาร)</option>
+        </select>
+        <div class="helper">ภูมิลำเนาของผู้ป่วย — ไม่ใช่สถานที่รักษา</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label">อาชีพ</label>
+        <input type="text" name="occupation" placeholder="เช่น เกษตรกร, รับจ้าง, ค้าขาย, นักศึกษา">
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 3. โรคร่วม ── -->
+  <div class="card">
+    <div class="card-header">
+      <span class="ico">🏥</span>
+      <h2>3. โรคร่วม (Comorbidities)</h2>
+    </div>
+    <div class="card-body">
+
+      <div class="field">
+        <label class="field-label req">เบาหวาน (DM)</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="dm" value="0" required onchange="toggle('dmBox', false)"> ไม่มี</label>
+          <label class="chip"><input type="radio" name="dm" value="1" onchange="toggle('dmBox', true)"> มี</label>
+        </div>
+        <div class="cond-box" id="dmBox">
+          <label class="field-label">HbA1c (%)</label>
+          <input type="number" name="hba1c" min="4" max="25" step="0.1" placeholder="เช่น 7.5">
+          <div class="helper">ค่าภายใน 3 เดือนก่อนวินิจฉัย TB หากไม่มีผลให้เว้นว่าง</div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="field">
+        <label class="field-label req">ความดันโลหิตสูง (HT)</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="ht" value="0" required> ไม่มี</label>
+          <label class="chip"><input type="radio" name="ht" value="1"> มี</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">HIV</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="hiv" value="0" required> ไม่มี (Negative)</label>
+          <label class="chip"><input type="radio" name="hiv" value="1"> มี (Positive)</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">eGFR (mL/min/1.73m²)</label>
+        <input type="number" name="gfr" min="1" max="200" step="0.1" placeholder="เช่น 85" required>
+        <div class="helper">Stage: ≥90 = S1 · 60–89 = S2 · 30–59 = S3 · 15–29 = S4 · &lt;15 = S5 (ESRD)</div>
+      </div>
+
+      <hr>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label req">COPD / หืด</label>
+          <div class="radio-group">
+            <label class="chip"><input type="radio" name="copd" value="0" required> ไม่มี</label>
+            <label class="chip"><input type="radio" name="copd" value="1"> มี</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label req">โรคตับ / ตับแข็ง</label>
+          <div class="radio-group">
+            <label class="chip"><input type="radio" name="liver" value="0" required> ไม่มี</label>
+            <label class="chip"><input type="radio" name="liver" value="1"> มี</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label req">โรคหัวใจ (IHD/DCM/Valvular)</label>
+          <div class="radio-group">
+            <label class="chip"><input type="radio" name="heart" value="0" required> ไม่มี</label>
+            <label class="chip"><input type="radio" name="heart" value="1"> มี</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label req">โรคหลอดเลือดสมอง (CVA/TIA)</label>
+          <div class="radio-group">
+            <label class="chip"><input type="radio" name="cva" value="0" required> ไม่มี</label>
+            <label class="chip"><input type="radio" name="cva" value="1"> มี</label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 4. ประวัติ TB ── -->
+  <div class="card">
+    <div class="card-header">
+      <span class="ico">📅</span>
+      <h2>4. ประวัติวัณโรค</h2>
+    </div>
+    <div class="card-body">
+
+      <div class="field">
+        <label class="field-label req">เคยรักษาวัณโรคมาก่อนหรือไม่</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="prev_tb" value="0" required onchange="toggle('prevBox', false)"> ไม่เคย</label>
+          <label class="chip"><input type="radio" name="prev_tb" value="1" onchange="toggle('prevBox', true)"> เคย &nbsp;≤ 2 ปี</label>
+          <label class="chip"><input type="radio" name="prev_tb" value="2" onchange="toggle('prevBox', true)"> เคย &nbsp;&gt; 2 ปี</label>
+        </div>
+        <div class="cond-box" id="prevBox">
+          <label class="field-label">ผลเชื้อ TB ครั้งก่อน</label>
+          <div class="radio-group">
+            <label class="chip"><input type="radio" name="cs_prev" value="0"> ไม่ทราบ / ไม่มีผล</label>
+            <label class="chip"><input type="radio" name="cs_prev" value="1"> DS-TB</label>
+            <label class="chip"><input type="radio" name="cs_prev" value="2"> MDR-TB</label>
+            <label class="chip"><input type="radio" name="cs_prev" value="3"> NG</label>
+            <label class="chip"><input type="radio" name="cs_prev" value="4"> DR non-MDR</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">AFB smear ยังบวกขณะรักษา (On-treatment AFB+)</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="on_tx_afb" value="0" required> ไม่มี</label>
+          <label class="chip"><input type="radio" name="on_tx_afb" value="1"> บวกที่ 2 เดือน</label>
+          <label class="chip"><input type="radio" name="on_tx_afb" value="2"> บวกที่ 3 เดือน</label>
+          <label class="chip"><input type="radio" name="on_tx_afb" value="3"> บวกที่ ≥ 5 เดือน</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">ขาดยาระหว่างรักษา (Lost to follow-up)</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="lost_fu" value="0" required onchange="toggle('lostBox', false)"> ไม่มี</label>
+          <label class="chip"><input type="radio" name="lost_fu" value="1" onchange="toggle('lostBox', true)"> มี</label>
+        </div>
+        <div class="cond-box" id="lostBox">
+          <label class="field-label">สาเหตุที่ขาดยา</label>
+          <input type="text" name="reason_lost" placeholder="เช่น ไม่มาตามนัด, แพ้ยา, ไม่สะดวกรับยา">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 5. ปัจจัยเสี่ยง ── -->
+  <div class="card">
+    <div class="card-header">
+      <span class="ico">⚠️</span>
+      <h2>5. ปัจจัยเสี่ยง</h2>
+    </div>
+    <div class="card-body">
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label req">สูบบุหรี่</label>
+          <div class="radio-group">
+            <label class="chip"><input type="radio" name="smoking" value="0" required> ไม่สูบ</label>
+            <label class="chip"><input type="radio" name="smoking" value="1"> สูบ</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label req">ดื่มแอลกอฮอล์</label>
+          <div class="radio-group">
+            <label class="chip"><input type="radio" name="alcohol" value="0" required> ไม่ดื่ม</label>
+            <label class="chip"><input type="radio" name="alcohol" value="1"> ดื่ม</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">สารเสพติด</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="drug" value="0" required> ไม่ใช้</label>
+          <label class="chip"><input type="radio" name="drug" value="1"> ยาบ้า / แอมเฟตามีน</label>
+          <label class="chip"><input type="radio" name="drug" value="2"> กัญชา</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">สัมผัสผู้ป่วย TB</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="contact" value="0" required> ไม่มี</label>
+          <label class="chip"><input type="radio" name="contact" value="1"> สัมผัส DS-TB</label>
+          <label class="chip"><input type="radio" name="contact" value="2"> สัมผัส MDR-TB / TB DR</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">กลุ่มเสี่ยงพิเศษ / ชุมชนแออัด</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="community" value="0" required> ไม่มี</label>
+          <label class="chip"><input type="radio" name="community" value="1"> ผู้ต้องขัง (เรือนจำ)</label>
+          <label class="chip"><input type="radio" name="community" value="2"> แรงงานต่างชาติ</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 6. Lab ── -->
+  <div class="card">
+    <div class="card-header">
+      <span class="ico">🔬</span>
+      <h2>6. ผลการตรวจทางห้องปฏิบัติการ</h2>
+    </div>
+    <div class="card-body">
+
+      <div class="field">
+        <label class="field-label req">AFB Smear</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="afb" value="0" required> Negative</label>
+          <label class="chip"><input type="radio" name="afb" value="1"> Positive</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">GeneXpert / PCR-TB</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="pcr" value="0" required> Negative</label>
+          <label class="chip"><input type="radio" name="pcr" value="1"> Positive — ไม่ดื้อ RIF</label>
+          <label class="chip"><input type="radio" name="pcr" value="2"> Positive — ดื้อ RIF (RR)</label>
+          <label class="chip"><input type="radio" name="pcr" value="3"> Positive — RR Indeterminate</label>
+          <label class="chip"><input type="radio" name="pcr" value="4"> ไม่ได้ส่งตรวจ</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">LPA (Line Probe Assay)</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="lpa" value="0" required> Negative</label>
+          <label class="chip"><input type="radio" name="lpa" value="1"> RIF ไว, INH ไว</label>
+          <label class="chip"><input type="radio" name="lpa" value="2"> RIF ดื้อ, INH ไว</label>
+          <label class="chip"><input type="radio" name="lpa" value="3"> RIF ไว, INH ดื้อ</label>
+          <label class="chip"><input type="radio" name="lpa" value="4"> ดื้อทั้ง RIF + INH</label>
+          <label class="chip"><input type="radio" name="lpa" value="5"> ไม่ได้ส่งตรวจ</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label req">Culture + DST</label>
+        <div class="radio-group">
+          <label class="chip"><input type="radio" name="culture" value="0" required> NG (ไม่ขึ้นเชื้อ)</label>
+          <label class="chip"><input type="radio" name="culture" value="1"> TB — ไว FLD ทั้งหมด</label>
+          <label class="chip"><input type="radio" name="culture" value="2"> TB — ดื้อ RIF, INH ไว</label>
+          <label class="chip"><input type="radio" name="culture" value="3"> TB — ดื้อ INH, RIF ไว</label>
+          <label class="chip"><input type="radio" name="culture" value="4"> TB — ดื้อทั้ง RIF + INH (MDR)</label>
+          <label class="chip"><input type="radio" name="culture" value="5"> ไม่ได้ส่งตรวจ</label>
+          <label class="chip"><input type="radio" name="culture" value="6"> Poly-drug resistant</label>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── 7. CXR ── -->
+  <div class="card">
+    <div class="card-header">
+      <span class="ico">🫁</span>
+      <h2>7. ภาพถ่ายรังสีทรวงอก (CXR)</h2>
+    </div>
+    <div class="card-body">
+      <div class="field">
+        <label class="field-label req" for="cxrFile">อัปโหลดภาพ CXR</label>
+        <div class="upload-area" id="uploadArea"
+             onclick="document.getElementById('cxrFile').click()">
+          <div class="upload-ico">🫁</div>
+          <div class="upload-text">คลิกเพื่อเลือกไฟล์ หรือลากไฟล์มาวาง</div>
+          <div class="upload-hint">รองรับ JPG · PNG · PDF &nbsp;|&nbsp; ขนาดสูงสุด 10 MB</div>
+        </div>
+        <input type="file" id="cxrFile" name="cxr_image"
+               accept="image/jpeg,image/png,image/gif,application/pdf"
+               style="display:none" onchange="previewCXR(this)" required>
+        <div id="cxrPreview" style="display:none; margin-top:12px;">
+          <img id="cxrImg" style="max-width:100%; max-height:300px; border-radius:8px; border:1px solid var(--border);">
+          <div id="cxrFileName" class="helper" style="margin-top:6px;"></div>
+        </div>
+        <div class="helper" style="margin-top:8px;">⚕️ แพทย์จะอ่านผลและบันทึกการแปลผล CXR ในภายหลัง</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Submit ── -->
+  <div class="submit-card">
+    <p>กรุณาตรวจสอบข้อมูลทุกช่องให้ครบถ้วนก่อนกดบันทึก<br>
+       แถบสีขาวด้านบนแสดงความสมบูรณ์ของแบบฟอร์ม</p>
+    <button type="button" class="btn-submit" onclick="submitForm()">💾 &nbsp;บันทึกข้อมูล</button>
+    <button type="button" class="btn-reset"  onclick="resetForm()">↺ &nbsp;ล้างข้อมูล</button>
+  </div>
+
+</div><!-- /container -->
+
+<!-- ── Success overlay ── -->
+<div class="overlay" id="successOverlay">
+  <div class="overlay-box">
+    <div class="ico-big">✅</div>
+    <h3>บันทึกข้อมูลสำเร็จ</h3>
+    <p>ข้อมูลถูกส่งไปยังฐานข้อมูลวิจัยเรียบร้อยแล้ว</p>
+    <button class="btn-new" onclick="resetForm()">➕ &nbsp;บันทึกรายถัดไป</button>
+  </div>
+</div>
+
+<script>
+/* ── BMI ── */
+function calcBMI() {
+  const bw = parseFloat(document.getElementById('bw').value);
+  const h  = parseFloat(document.getElementById('height').value);
+  const pill = document.getElementById('bmiPill');
+  if (bw > 0 && h > 0) {
+    const bmi = bw / ((h / 100) ** 2);
+    document.getElementById('bmiVal').textContent = bmi.toFixed(2);
+    document.getElementById('bmiHidden').value    = bmi.toFixed(2);
+    const cats = [[18.5,'น้ำหนักน้อย (Underweight)'],[23,'ปกติ (Normal)'],[25,'น้ำหนักเกิน (Overweight)'],[Infinity,'อ้วน (Obese)']];
+    document.getElementById('bmiCat').textContent = '— ' + cats.find(c => bmi < c[0])[1];
+    pill.classList.add('show');
+  } else {
+    pill.classList.remove('show');
+  }
+  updateProgress();
+}
+
+/* ── Conditional toggle ── */
+function toggle(id, open) {
+  document.getElementById(id).classList.toggle('open', open);
+}
+
+/* ── CXR upload preview ── */
+function previewCXR(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const area    = document.getElementById('uploadArea');
+  const preview = document.getElementById('cxrPreview');
+  const img     = document.getElementById('cxrImg');
+  const fname   = document.getElementById('cxrFileName');
+  area.classList.add('has-file');
+  fname.textContent = `✓ ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+  if (file.type.startsWith('image/')) {
+    const r = new FileReader();
+    r.onload = e => { img.src = e.target.result; img.style.display = 'block'; preview.style.display = 'block'; };
+    r.readAsDataURL(file);
+  } else {
+    img.style.display = 'none';
+    preview.style.display = 'block';
+  }
+  updateProgress();
+}
+
+/* ── Drag-and-drop for upload area ── */
+(function () {
+  const area  = document.getElementById('uploadArea');
+  const input = document.getElementById('cxrFile');
+  area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('drag-over'); });
+  area.addEventListener('dragleave', () => area.classList.remove('drag-over'));
+  area.addEventListener('drop', e => {
+    e.preventDefault();
+    area.classList.remove('drag-over');
+    const files = e.dataTransfer.files;
+    if (files.length) {
+      const dt = new DataTransfer();
+      dt.items.add(files[0]);
+      input.files = dt.files;
+      previewCXR(input);
+    }
+  });
+})();
+
+/* ── Chip highlight ── */
+document.addEventListener('change', e => {
+  if (e.target.type === 'radio') {
+    const grp = e.target.closest('.radio-group');
+    if (grp) grp.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    e.target.closest('.chip')?.classList.add('active');
+    updateProgress();
+  }
+});
+document.addEventListener('input', e => {
+  if (['text','number','date'].includes(e.target.type)) updateProgress();
+});
+document.addEventListener('change', e => {
+  if (e.target.tagName === 'SELECT') updateProgress();
+});
+
+/* ── Progress ── */
+function updateProgress() {
+  const names = new Set();
+  document.querySelectorAll('[required]').forEach(el => {
+    if (el.type === 'radio') names.add('r:' + el.name);
+    else names.add('f:' + (el.name || el.id));
+  });
+  let done = 0;
+  names.forEach(key => {
+    if (key.startsWith('r:')) {
+      if (document.querySelector(`input[name="${key.slice(2)}"]:checked`)) done++;
+    } else {
+      const el = document.querySelector(`[name="${key.slice(2)}"]`);
+      if (el && el.value.trim()) done++;
+    }
+  });
+  const pct = Math.round((done / names.size) * 100);
+  document.getElementById('progressFill').style.width  = pct + '%';
+  document.getElementById('progressLabel').textContent = `กรอกข้อมูล ${pct}%`;
+}
+
+/* ── Submit ── */
+function submitForm() {
+  // Validation
+  const missing = [];
+  const names = new Set();
+  document.querySelectorAll('[required]').forEach(el => {
+    if (el.type === 'radio') names.add(el.name);
+  });
+  names.forEach(name => {
+    if (!document.querySelector(`input[name="${name}"]:checked`))
+      missing.push(name);
+  });
+  document.querySelectorAll('input[required]:not([type="radio"]):not([type="file"]), select[required]').forEach(el => {
+    if (!el.value.trim()) missing.push(el.name || el.id);
+  });
+  if (!document.getElementById('cxrFile').files.length) missing.push('ภาพ CXR');
+
+  if (missing.length) {
+    alert(`⚠️ ยังกรอกข้อมูลไม่ครบ ${missing.length} รายการ\nกรุณาตรวจสอบช่องที่มีเครื่องหมาย ★`);
+    return;
+  }
+
+  // Collect non-file data
+  const data = { timestamp: new Date().toISOString() };
+  document.querySelectorAll('input:not([type="radio"]):not([type="file"]), select, textarea').forEach(el => {
+    if (el.name) data[el.name] = el.value;
+  });
+  document.querySelectorAll('input[type="radio"]:checked').forEach(el => {
+    data[el.name] = el.value;
+  });
+
+  // Read CXR image as base64 then send
+  const file = document.getElementById('cxrFile').files[0];
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    data.cxr_image_b64  = e.target.result.split(',')[1];
+    data.cxr_image_mime = file.type;
+    data.cxr_image_name = file.name;
+    sendData(data);
+  };
+  reader.readAsDataURL(file);
+}
+
+function sendData(data) {
+  // ⚠️ แทนที่ YOUR_SCRIPT_ID ด้วย Web App URL ที่ได้จากการ Deploy บน Google Apps Script
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzI8ytQEQW35UQiN9u4IgL6-HWqp3L9mgHLXwInjqnf0o0uwH7GfRnb80NK_RP9MTSXnQ/exec';
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',                          // Apps Script ไม่ส่ง CORS header — ใช้ no-cors
+    body: JSON.stringify(data),
+    headers: { 'Content-Type': 'text/plain' } // text/plain = simple request ไม่ต้อง preflight
+  })
+  .then(() => showSuccess())
+  .catch(() => alert('เกิดข้อผิดพลาด กรุณาลองใหม่'));
+}
+
+function showSuccess() {
+  document.getElementById('successOverlay').classList.add('show');
+}
+
+function resetForm() {
+  document.getElementById('successOverlay').classList.remove('show');
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    if (el.type === 'radio' || el.type === 'checkbox') el.checked = false;
+    else el.value = '';
+  });
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.cond-box').forEach(b => b.classList.remove('open'));
+  document.getElementById('bmiPill').classList.remove('show');
+  document.getElementById('uploadArea').classList.remove('has-file');
+  document.getElementById('cxrPreview').style.display = 'none';
+  document.getElementById('cxrImg').src = '';
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
